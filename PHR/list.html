@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<meta http-equiv="Content-Type" Content="text/html; charset=utf-8" />
+
+<table id="people" class="table">
+  <thead class="thead-inverse">
+    <tr class="bg-primary">
+      <th >No.</th>
+      <th>ID</th>
+      <th>이름</th>
+      <th>생년월일</th>
+      <th>성별</th>
+      <th>전화번호</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+
+
+
+
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+  $.ajax({
+    type: "POST",
+    data: {
+      "gender": $("#gender").val()
+    },
+    url: "http://igrus.mireene.com/PHR/jsoncheck.php",
+    dataType: "json",
+    success: function(JSONObject) {
+      var peopleHTML = "";
+
+      // Loop through Object and create peopleHTML
+      var no=0;
+      for (var key in JSONObject) {
+        if (JSONObject.hasOwnProperty(key)) {
+          peopleHTML += "<tr>";
+          
+          peopleHTML += "<td>" + ++no + "</td>";
+
+          peopleHTML += "<td>" + JSONObject[key]["userid"] + "</td>";
+          peopleHTML += "<td>" + JSONObject[key]["name"] + "</td>";
+
+          peopleHTML += "<td>" + JSONObject[key]["birth"] + "</td>";
+          peopleHTML += "<td>" + JSONObject[key]["sex"] + "</td>";
+          peopleHTML += "<td>" + JSONObject[key]["phonenumber"] + "</td>";
+          
+          peopleHTML += "<td>" + "<form action='patient.php' method='post' >" +
+          "<input type='hidden' name='userid' value='"+ JSONObject[key]["userid"] +"'>" +
+          "<Button class='btn btn-primary btn-block' type='submit'>"
+          +"권한요청"+"</Button>"  + "</form>" + "</td>";
+          peopleHTML += "</tr>";
+        }
+      }
+
+      // Replace table’s tbody html with peopleHTML
+      $("#people tbody").html(peopleHTML);
+    }
+  });
+</script>
+</html>
